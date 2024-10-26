@@ -1,1 +1,129 @@
-<h1>Test</h1>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #333;
+            padding: 15px;
+        }
+        
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #555;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background-color: #f1f1f1;
+        }
+
+        .search-container input[type="text"] {
+            padding: 10px;
+            width: 50%;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .search-container button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            background-color: #333;
+            color: #fff;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+
+        .results {
+            display: none;
+            padding: 20px;
+            text-align: left;
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        .results a {
+            color: blue;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+        }
+
+        .results a:hover {
+            text-decoration: underline;
+        }
+
+        .content {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="#">Malwares</a>
+        <a href="#">Online Compilers</a>
+        <a href="#">Hack tools + source code</a>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search for something on google... Sub to pankoza3 on youtube">
+        <button onclick="performSearch()">Search</button>
+    </div>
+
+    <div class="results" id="results">
+        <p>Arama sonuçları:</p>
+        <a id="searchResult" href="#" target="_blank">View Results</a>
+    </div>
+
+    <div class="content">
+        <h1>Pankozaother is Pankoza3-pl's official website where you can find hack tools, its source codes, malwares and more!</h1>
+    </div>
+
+    <script>
+        function performSearch() {
+            const query = document.getElementById("searchInput").value.trim(); // Boşlukları kaldırıyoruz
+            const resultsContainer = document.getElementById("results");
+            const searchResult = document.getElementById("searchResult");
+
+            if (query !== "") {
+                const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                searchResult.href = googleSearchUrl;
+                resultsContainer.style.display = "block";
+            } else {
+                resultsContainer.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
