@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pankoza3-pl website do the verification.</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .captcha {
+            margin: 20px 0;
+        }
+        .hidden {
+            display: none;
+        }
+        #error-message {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Matematik CAPTCHA</h1>
+    <form id="captchaForm">
+        <div class="captcha">
+            <label id="question"></label>
+            <input type="text" id="answer" required>
+        </div>
+        <button type="submit">Gönder</button>
+    </form>
+    <div id="error-message" class="hidden"></div>
+
+    <script>
+        const questions = [
+            { question: '1 X 1', answer: 1 },
+            { question: '2 X 2', answer: 4 },
+            { question: '1 + 1', answer: 2 },
+            { question: '50 + 20', answer: 70 },
+            { question: '0 X 5', answer: 0 },
+            { question: '4 : 2', answer: 2 }
+        ];
+
+        let currentQuestion = {};
+
+        function generateQuestion() {
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            currentQuestion = questions[randomIndex];
+            document.getElementById('question').innerText = currentQuestion.question + ' = ';
+            document.getElementById('answer').value = '';
+            document.getElementById('error-message').classList.add('hidden');
+        }
+
+        window.onload = generateQuestion;
+
+        document.getElementById('captchaForm').onsubmit = function(event) {
+            event.preventDefault();
+
+            const userAnswer = parseInt(document.getElementById('answer').value);
+
+            if (!isNaN(userAnswer) && userAnswer === currentQuestion.answer) {
+                window.location.href = '/welcome.html';
+            } else {
+                document.getElementById('error-message').innerText = 'Hmm, looks you typed the answer incorrect. Make sure you are not a robot to solve this hard verification.';
+                document.getElementById('error-message').classList.remove('hidden');
+                generateQuestion();
+            }
+        };
+    </script>
+</body>
+</html>
