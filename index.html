@@ -7,6 +7,10 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
         }
         .captcha {
             margin: 20px 0;
@@ -17,10 +21,16 @@
         #error-message {
             color: red;
         }
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 10px;
+            background-color: #f1f1f1;
+        }
     </style>
 </head>
 <body>
-    <h1>Matematik CAPTCHA</h1>
+    <h1>DO IF YOU NOT A ROBOT</h1>
     <form id="captchaForm">
         <div class="captcha">
             <label id="question"></label>
@@ -29,6 +39,10 @@
         <button type="submit">Gönder</button>
     </form>
     <div id="error-message" class="hidden"></div>
+
+    <div class="footer">
+        STILL IN DEVELOPMENT
+    </div>
 
     <script>
         const questions = [
