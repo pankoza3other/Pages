@@ -72,7 +72,7 @@
             const userAnswer = parseInt(document.getElementById('answer').value);
 
             if (!isNaN(userAnswer) && userAnswer === currentQuestion.answer) {
-                window.location.href = 'UserPage/welcome.html'; // Ensure this points to the correct path
+                window.location.href = 'welcome.html'; // Updated line
             } else {
                 document.getElementById('error-message').innerText = 'Hmm, looks you typed the answer incorrect. Make sure you are not a robot to solve this hard verification.';
                 document.getElementById('error-message').classList.remove('hidden');
